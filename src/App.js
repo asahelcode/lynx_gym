@@ -1,10 +1,13 @@
 import './App.css';
-import { Box, Stack } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
 
 function App() {
-  return <Box>
-    
-  </Box>;
+  return (
+    <Routes>
+      <Route path='/' element={<Home />} />
+    </Routes>
+  );
 }
 
 export default App;
