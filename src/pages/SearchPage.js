@@ -7,13 +7,13 @@ import {
   Pagination,
   TextField,
   Button,
+  fabClasses,
+  CircularProgress,
 } from '@mui/material';
 import { useStateValue } from '../StateProvider';
 import { fetchData, exerciseOptions } from '../utils/fetchData';
 import ExerciseCard from '../components/ExerciseCard';
 import Loader from '../components/Loader';
-
-import data from '../data.json';
 
 const SearchPage = () => {
   const questionPerPage = 6;
@@ -22,11 +22,37 @@ const SearchPage = () => {
   const [page, setPage] = useState(1);
   const [currentExercises, setCurrentExercises] = useState([]);
   const [input, setInput] = useState('');
+  const [searchBoolean, setSearchBoolean] = useState(false);
 
-  const handleSearch = async () => {
+  useEffect(() => {
     const fetchSearchData = async () => {
       const exercisesData = await fetchData(
-        `https://exercisedb.p.rapidapi.com/exercises`,
+        // `https://exercisedb.p.rapidapi.com/exercises`,
+        exerciseOptions
+      );
+
+      const filterSearch = exercisesData.filter(
+        (exercise) =>
+          exercise.target.includes(term) ||
+          exercise.name.includes(term) ||
+          exercise.equipment.includes(term) ||
+          exercise.bodyPart.includes(term)
+      );
+
+      dispatch({
+        type: 'SET_EXERCISES',
+        payload: filterSearch,
+      });
+    };
+
+    fetchSearchData();
+  }, [term]);
+
+  const handleSearch = async () => {
+    setSearchBoolean(true);
+    const fetchSearchData = async () => {
+      const exercisesData = await fetchData(
+        // `https://exercisedb.p.rapidapi.com/exercises`,
         exerciseOptions
       );
 
@@ -38,12 +64,15 @@ const SearchPage = () => {
           exercise.bodyPart.includes(input)
       );
 
+      setSearchBoolean(false);
+
       dispatch({
         type: 'SET_EXERCISES',
         payload: filterSearch,
       });
     };
 
+    setInput('');
     fetchSearchData();
   };
 
@@ -51,7 +80,7 @@ const SearchPage = () => {
     const lastExerciseIndex = page * questionPerPage;
     const beginningExerciseIndex = lastExerciseIndex - questionPerPage;
 
-    const currentPageExercise = exercises.slice(
+    const currentPageExercise = exercises?.slice(
       beginningExerciseIndex,
       lastExerciseIndex
     );
@@ -62,7 +91,7 @@ const SearchPage = () => {
   const handleChange = (event, value) => {
     setPage(value);
   };
- 
+
   return (
     <>
       <Stack
@@ -77,9 +106,13 @@ const SearchPage = () => {
           onChange={(e) => setInput(e.target.value)}
           value={input}
         />
-        <Button variant='contained' onClick={handleSearch}>
-          Search
-        </Button>
+        {searchBoolean === false ? (
+          <Button variant='contained' onClick={handleSearch}>
+            Search
+          </Button>
+        ) : (
+          <CircularProgress />
+        )}
       </Stack>
       <Box
         width='100%'
@@ -108,6 +141,7 @@ const SearchPage = () => {
           count={Math.ceil(exercises.length / questionPerPage)}
           page={page}
           onChange={handleChange}
+          defaultPage={1}
         />
       </Stack>
     </>
