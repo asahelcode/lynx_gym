@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Explore = () => {
-  return (
-    <div>Explore</div>
-  )
-}
+  return <div>Not available</div>;
+};
 
-export default Explore
+export default Explore;

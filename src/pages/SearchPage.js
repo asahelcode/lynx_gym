@@ -27,7 +27,7 @@ const SearchPage = () => {
   useEffect(() => {
     const fetchSearchData = async () => {
       const exercisesData = await fetchData(
-        // `https://exercisedb.p.rapidapi.com/exercises`,
+        `https://exercisedb.p.rapidapi.com/exercises`,
         exerciseOptions
       );
 
@@ -52,7 +52,7 @@ const SearchPage = () => {
     setSearchBoolean(true);
     const fetchSearchData = async () => {
       const exercisesData = await fetchData(
-        // `https://exercisedb.p.rapidapi.com/exercises`,
+        `https://exercisedb.p.rapidapi.com/exercises`,
         exerciseOptions
       );
 

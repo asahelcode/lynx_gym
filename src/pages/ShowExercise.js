@@ -29,7 +29,8 @@ const ShowExercise = () => {
     const lastExerciseIndex = page * questionPerPage;
     const beginningExerciseIndex = lastExerciseIndex - questionPerPage;
 
-    const currentPageExercise = exercises.slice(
+    console.log(exercises);
+    const currentPageExercise = exercises?.slice(
       beginningExerciseIndex,
       lastExerciseIndex
     );
@@ -48,17 +49,18 @@ const ShowExercise = () => {
     });
 
     const fetchBodyPartExercises = async () => {
-      // const exercisesData = await fetchData(
-      //   // `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${name}`,
-      //   exerciseOptions
-      // );
+      const exercisesData = await fetchData(
+        `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${name}`,
+        exerciseOptions
+      );
 
       dispatch({
         type: 'SET_EXERCISES',
-        payload: data,
+        payload: exercisesData,
       });
     };
 
+    setInput('');
     fetchBodyPartExercises();
   }, [name]);
 
